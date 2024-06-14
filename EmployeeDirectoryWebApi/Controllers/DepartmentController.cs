@@ -2,11 +2,13 @@
 using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
 using EmployeeDirectory.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeDirectoryWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DepartmentController : ControllerBase
     {
         private readonly IDepartmentRepo _departmentRepo;
@@ -32,7 +34,7 @@ namespace EmployeeDirectoryWebApi.Controllers
         [HttpPost("filtered")]
         public async Task<IActionResult> GetFilteredDepartments(FilteringData filteringData)
         {
-            return Ok(await _departmentRepo.GetFiltered(filteringData.StatusIds, filteringData.DepartmentIds));
+            return Ok(await _departmentRepo.GetFiltered(filteringData.StatusIds, filteringData.LocationIds));
         }
 
         [HttpDelete]

@@ -1,10 +1,13 @@
-﻿using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
+﻿using EmployeeDirectory.Concerns.DTO_s;
+using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
 
 namespace EmployeeDirectory.Repository.Interfaces
 {
     public interface IRoleRepo
     {
-        void Add(Role role);
+        Role Add(Role role);
+
+        Role? Edit(Role role);
 
         List<Role> GetAll();
 
@@ -13,5 +16,11 @@ namespace EmployeeDirectory.Repository.Interfaces
         bool DeleteRole(int id);
 
         List<Role> GetRoleInDepartment(int departmntId);
+
+        List<Role> GetFilteredRole(RoleFiters filters);
+
+        Role? GetRoleWithEmployees(int roleId);
+        
+        List<Role> GetRolesWithEmployees();
     }
 }

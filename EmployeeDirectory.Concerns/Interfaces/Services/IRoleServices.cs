@@ -1,8 +1,12 @@
-﻿namespace EmployeeDirectory.Concerns.Interfaces
+﻿using EmployeeDirectory.Concerns.DTO_s;
+
+namespace EmployeeDirectory.Concerns.Interfaces
 {
     public interface IRoleServices
     {
-        void AddRole(RoleDTO role);
+        int AddRole(AddRole role);
+        
+        bool EditRole(AddRole role, int id);
 
         List<RoleDTO> GetRoles();
 
@@ -11,5 +15,10 @@
         bool DeleteRole(int id);
 
         List<RoleDTO> GetRoleInDepartment(int departmntId);
+
+        List<RoleDTO> GetFilteredRoles(RoleFiters filters);
+
+        RoleDTO? GetRoleWithEmployees(int roleId);
+        List<RoleDTO> GetRolesWithEmployees();
     }
 }

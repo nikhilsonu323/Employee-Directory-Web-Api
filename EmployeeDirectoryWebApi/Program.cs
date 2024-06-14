@@ -2,7 +2,10 @@ using EmployeeDirectory.Repository.ScaffoldData;
 using EmployeeDirectoryWebApi;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApplication.Validators;
 
 internal class Program
@@ -24,6 +27,25 @@ internal class Program
         });
 
         builder.Services.AddDependency();
+
+        builder.Services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt =>
+        {
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+/*                ValidIssuer = builder.Configuration["JWT:Issuer"],
+                ValidAudience = builder.Configuration["JWT:Audience"],*/
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!)),
+                /*ClockSkew = TimeSpan.Zero,*/
+            };
+        });
 
         builder.Services.AddCors(opt =>
         {
@@ -51,7 +73,8 @@ internal class Program
 
         app.UseHttpsRedirection();
 
-        /*app.UseAuthorization();*/
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 

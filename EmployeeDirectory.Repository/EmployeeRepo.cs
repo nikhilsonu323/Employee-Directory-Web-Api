@@ -70,7 +70,7 @@ namespace EmployeeDirectory.Repository
             return true;
         }
 
-        public List<Employee> GetFilterData(Filter filterData)
+        public List<Employee> GetFilterEmployees(EmployeeFilters filters)
         {
            return  _dbContext.Employees
                 .Include(e => e.Manager)
@@ -79,19 +79,45 @@ namespace EmployeeDirectory.Repository
                 .Include(e => e.Role)
                 .ThenInclude(e => e.Department)
                 .Where(e =>
-                (filterData.Alphabets.Count == 0 || filterData.Alphabets.Contains(e.FirstName.Substring(0, 1).ToUpper())) &&
-                (filterData.LocationIds.Count == 0 || filterData.LocationIds.Contains(e.LocationId)) &&
-                (filterData.DepartmentIds.Count == 0 || filterData.DepartmentIds.Contains(e.Role.DepartmentId)) &&
-                (filterData.StatusIds.Count == 0 || filterData.StatusIds.Contains(e.StatusId)))
+                (filters.Alphabets.Count == 0 || filters.Alphabets.Contains(e.FirstName.Substring(0, 1).ToUpper())) &&
+                (filters.LocationIds.Count == 0 || filters.LocationIds.Contains(e.LocationId)) &&
+                (filters.DepartmentIds.Count == 0 || filters.DepartmentIds.Contains(e.Role.DepartmentId)) &&
+                (filters.StatusIds.Count == 0 || filters.StatusIds.Contains(e.StatusId)))
                 .ToList();
         }
 
-        public List<Manager> GetManagers(string? currentEmpNo)
+        public List<Manager> GetManagers()
         {
             return _dbContext.Employees
-                .Where(emp => currentEmpNo != null && emp.EmpNo != currentEmpNo)
                 .Select(emp => new Manager() { EmpNo = emp.EmpNo, FirstName = emp.FirstName, LastName = emp.LastName })
                 .ToList();
+        }
+
+        public List<Employee> GetEmployeesInRole(int roleId)
+        {
+            return _dbContext.Employees
+                .Include(e => e.Manager)
+                .Include(e => e.Location)
+                .Include(e => e.Status)
+                .Include(e => e.Role)
+                .ThenInclude(e => e.Department)
+                .Where(e => e.RoleId == roleId)
+                .ToList();
+        }
+
+        public void UpdateEmployeesRole(List<string> employeeIds, int roleId)
+        {
+            if (!employeeIds.Any())
+            {
+                return;
+            }
+            var employees = _dbContext.Employees.Where(emp => employeeIds.Contains(emp.EmpNo));
+            foreach (var employee in employees)
+            {
+                employee.RoleId = roleId;
+            }
+
+            _dbContext.SaveChanges();
         }
     }
 }

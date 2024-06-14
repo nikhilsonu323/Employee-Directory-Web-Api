@@ -12,11 +12,12 @@ public class EmployeeValidator : AbstractValidator<EmployeeDTO>
     private readonly IProjectRepo _projectRepo;
     private readonly ILocationRepo _locationRepo;
     private readonly IStatusRepo _statusRepo;
+    private const int MaxFileSizeInBytes = 2 * 1024 * 1024; // 2 MB
 
     public EmployeeValidator(IEmployeeServices employeeServices, IRoleServices roleServices, 
                              IProjectRepo projectRepo, ILocationRepo locationRepo, IStatusRepo statusRepo)
     {
-        _employeeServices = employeeServices;
+    _employeeServices = employeeServices;
         _roleServices = roleServices;
         _projectRepo = projectRepo;
         _locationRepo = locationRepo;
@@ -91,14 +92,34 @@ public class EmployeeValidator : AbstractValidator<EmployeeDTO>
                 .Must(ExistId).WithMessage("Manager with this Id doesn't Exist");
         });
 
+        When(emp => emp.ImageData != null, () =>
+        {
+            RuleFor(emp => emp.ImageData)
+                .Cascade(CascadeMode.Stop)
+                .Must(BeValidSize).WithMessage("Image Size Exceeds 2 MB");
+        });
+
     }
 
     private bool ExistId(string managerId)
     {
         return _employeeServices.GetEmployee(managerId) != null;
     }
+    private bool BeValidSize(string? imageData)
+    {
+        if (imageData == null) return true;
+        var base64String = imageData.Split(",")[1];
+        try
+        {
+            return Convert.FromBase64String(base64String).Length > MaxFileSizeInBytes ? false : true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
-    public bool BeAValidRoleId(int id)
+    private bool BeAValidRoleId(int id)
     {
         return _roleServices.GetRole(id) != null;
     }
@@ -109,17 +130,17 @@ public class EmployeeValidator : AbstractValidator<EmployeeDTO>
         return _projectRepo.IsIdExists(id.Value);
     }
 
-    public bool BeAValidStatusId(int id)
+    private bool BeAValidStatusId(int id)
     {
         return _statusRepo.IsIdExists(id);
     }
 
-    public bool BeAValidLocationId(int id)
+    private bool BeAValidLocationId(int id)
     {
         return _locationRepo.IsIdExists(id);
     }
 
-    public bool BeAtLeast18YearsOld(DateOnly dateofBirth, DateOnly joiningDate)
+    private bool BeAtLeast18YearsOld(DateOnly dateofBirth, DateOnly joiningDate)
     {
         if (dateofBirth > joiningDate.AddYears(-18))
             return false;

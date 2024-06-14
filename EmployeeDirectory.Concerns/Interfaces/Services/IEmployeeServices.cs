@@ -12,8 +12,12 @@
 
         EmployeeDTO? GetEmployee(string id);
 
-        List<EmployeeDTO> GetFilterData(Filter filterData);
+        List<EmployeeDTO> GetFilterEmployees(EmployeeFilters filterData);
 
-        List<Manager> GetManagers(string? currentEmpNo);
+        List<Manager> GetManagers();
+
+        List<EmployeeDTO> GetEmployeesInRole(int roleId);
+
+        void UpdateEmployeesRole(List<string> employeeIds,int roleId);
     }
 }

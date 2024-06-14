@@ -29,6 +29,8 @@ public partial class Employee
 
     public DateOnly JoiningDate { get; set; }
 
+    public string? ImageData { get; set; }
+
     public virtual ICollection<Employee> InverseManager { get; set; } = new List<Employee>();
 
     public virtual Location Location { get; set; } = null!;

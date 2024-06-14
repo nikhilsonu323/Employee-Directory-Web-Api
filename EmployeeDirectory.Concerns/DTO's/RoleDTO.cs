@@ -15,4 +15,6 @@ public class RoleDTO
     public required string? Location { get; set; }
 
     public string? Description { get; set; }
+
+    public ICollection<EmployeeDTO>? Employees { get; set; } = null;
 }

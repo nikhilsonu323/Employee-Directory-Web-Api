@@ -2,11 +2,13 @@
 using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
 using EmployeeDirectory.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeDirectoryWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LocationsController : ControllerBase
     {
         private readonly ILocationRepo _locationRepo;

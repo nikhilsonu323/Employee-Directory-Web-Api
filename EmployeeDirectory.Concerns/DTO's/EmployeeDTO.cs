@@ -28,6 +28,8 @@ public class EmployeeDTO
     public string? Status { get; set; }
 
     public DateOnly? DateOfBirth { get; set; }
-
     public required DateOnly JoiningDate { get; set; }
+
+    public string? ImageData { get; set; }
+
 }

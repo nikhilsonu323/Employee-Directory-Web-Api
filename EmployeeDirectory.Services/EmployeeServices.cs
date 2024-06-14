@@ -42,14 +42,24 @@ namespace EmployeeDirectory.Services
             return _employeeRepo.RemoveById(id);
         }
 
-        public List<EmployeeDTO> GetFilterData(Filter filterData)
+        public List<EmployeeDTO> GetFilterEmployees(EmployeeFilters filterData)
         {
-            return Mapper.MapToEmployeeDTO(_employeeRepo.GetFilterData(filterData));
+            return Mapper.MapToEmployeeDTO(_employeeRepo.GetFilterEmployees(filterData));
         }
 
-        public List<Manager> GetManagers(string? currentEmpNo)
+        public List<Manager> GetManagers()
         {
-            return _employeeRepo.GetManagers(currentEmpNo);
+            return _employeeRepo.GetManagers();
+        }
+
+        public List<EmployeeDTO> GetEmployeesInRole(int roled)
+        {
+            return Mapper.MapToEmployeeDTO(_employeeRepo.GetEmployeesInRole(roled));
+        }
+
+        public void UpdateEmployeesRole(List<string> employeeIds, int roleId)
+        {
+            _employeeRepo.UpdateEmployeesRole(employeeIds, roleId);
         }
     }
 }

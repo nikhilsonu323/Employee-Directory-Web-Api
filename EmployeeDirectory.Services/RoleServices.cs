@@ -1,4 +1,5 @@
 ﻿using EmployeeDirectory.Concerns;
+using EmployeeDirectory.Concerns.DTO_s;
 using EmployeeDirectory.Concerns.Interfaces;
 using EmployeeDirectory.Repository.Interfaces;
 using EmployeeDirectory.Services.Utilities;
@@ -14,14 +15,14 @@ namespace EmployeeDirectory.Services
             _roleRepo = roleRepo;
         }
 
-        public void AddRole(RoleDTO role)
+        public int AddRole(AddRole role)
         {
-            _roleRepo.Add(Mapper.MapToRoleData(role));
+            return _roleRepo.Add(Mapper.MapToRole(role)).Id;
         }
 
         public RoleDTO? GetRole(int id)
         {
-            var role = Mapper.MapToRoleDTO(_roleRepo.GetById(id));
+            var role = Mapper.MapToRoleDTO(_roleRepo.GetById(id), true);
             return role;
         }
 
@@ -39,6 +40,29 @@ namespace EmployeeDirectory.Services
         public List<RoleDTO> GetRoleInDepartment(int departmntId)
         {
             return Mapper.MapToRoleDTO(_roleRepo.GetRoleInDepartment(departmntId));
+        }
+
+        public List<RoleDTO> GetFilteredRoles(RoleFiters filters)
+        {
+            return Mapper.MapToRoleDTO(_roleRepo.GetFilteredRole(filters), true);
+        }
+
+        public RoleDTO? GetRoleWithEmployees(int roleId)
+        {
+            return Mapper.MapToRoleDTO(_roleRepo.GetRoleWithEmployees(roleId), true);
+        }
+
+        public List<RoleDTO> GetRolesWithEmployees()
+        {
+            return Mapper.MapToRoleDTO(_roleRepo.GetRolesWithEmployees(), true);
+        }
+
+        public bool EditRole(AddRole roleToAdd, int id)
+        {
+            var role = Mapper.MapToRole(roleToAdd);
+            role.Id = id;
+            role = _roleRepo.Edit(role);
+            return role != null;
         }
     }
 }

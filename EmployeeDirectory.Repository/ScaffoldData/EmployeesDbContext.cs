@@ -1,10 +1,15 @@
-﻿using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
+﻿using System;
+using System.Collections.Generic;
+using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectory.Repository.ScaffoldData;
 
 public partial class EmployeesDbContext : DbContext
 {
+    public EmployeesDbContext()
+    {
+    }
 
     public EmployeesDbContext(DbContextOptions<EmployeesDbContext> options)
         : base(options)
@@ -23,7 +28,12 @@ public partial class EmployeesDbContext : DbContext
 
     public virtual DbSet<Status> Statuses { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    public virtual DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=10.0.0.27;Database=EmployeesDb;Trusted_Connection=True;encrypt=false;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -67,6 +77,15 @@ public partial class EmployeesDbContext : DbContext
         modelBuilder.Entity<Status>(entity =>
         {
             entity.ToTable("Status");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Email).HasName("PK__Users__A9D105351C29FC86");
+
+            entity.Property(e => e.Email).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Password).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

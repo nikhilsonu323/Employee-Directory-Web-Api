@@ -10,7 +10,9 @@ namespace EmployeeDirectory.Repository.Interfaces
         Employee? GetById(string id);
         bool RemoveById(string id);
         bool Update(Employee newEmployeeDetails);
-        List<Employee> GetFilterData(Filter filterData);
-        List<Manager> GetManagers(string? currentEmpNo);
+        List<Employee> GetFilterEmployees(EmployeeFilters filterData);
+        List<Manager> GetManagers();
+        List<Employee> GetEmployeesInRole(int roleId);
+        void UpdateEmployeesRole(List<string> employeeIds, int roleId);
     }
 }

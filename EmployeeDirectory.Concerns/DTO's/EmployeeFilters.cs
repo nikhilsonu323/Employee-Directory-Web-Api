@@ -1,6 +1,6 @@
 ﻿namespace EmployeeDirectory.Concerns
 {
-    public class Filter
+    public class EmployeeFilters
     {
         public List<string> Alphabets { get; set; }
         public List<int> StatusIds { get; set; }

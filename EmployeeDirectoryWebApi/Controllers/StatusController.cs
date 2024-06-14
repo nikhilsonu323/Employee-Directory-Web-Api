@@ -1,12 +1,13 @@
-﻿using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
-using EmployeeDirectory.Repository.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using EmployeeDirectory.Repository.Interfaces;
+using EmployeeDirectory.Repository.ScaffoldData.DataConcerns;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeDirectoryWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StatusController : ControllerBase
     {
         private readonly IStatusRepo _statusRepo;
